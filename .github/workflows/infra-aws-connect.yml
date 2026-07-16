@@ -1,7 +1,8 @@
 name: Test AWS connection
 
 on:
-  push:
+  workflow_dispatch:
+
 
 permissions:
   id-token: write
