@@ -1,0 +1,27 @@
+name: Test snowflake connection
+
+on:
+  workflow_dispatch:
+    # Temporarily only allow manual runs. Later this CI workflow will be combined with others
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test-snowflake-connection:
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Snowflake CLI & Connect via OIDC.
+        uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: Test connection through snowflake
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+        run: |
+          snow connection test -x
