@@ -16,7 +16,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v6.1.0
         with:
           role-to-assume: arn:aws:iam::696881926006:role/tf-state-manager-dev
-          aws-region: ${{ env.AWS_region }}
+          aws-region: ${{ vars.AWS_region }}
 
       - name: Check connection
         run: |
