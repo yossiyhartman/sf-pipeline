@@ -1,0 +1,44 @@
+name: Infrastructure CI
+run-name: format and validate infrastructure
+
+on:
+  push:
+    paths:
+      - infra/**
+  pull_request:
+    paths:
+      - infra/**
+
+permissions:
+  contents: read
+
+jobs:
+  fmt:
+    name: Format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: terraform fmt
+        working-directory: infra
+        run: terraform fmt -check -recursive -diff
+
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: terraform init
+        working-directory: infra
+        run: terraform init -backend=false
+
+      - name: terraform validate
+        working-directory: infra
+        run: terraform validate
