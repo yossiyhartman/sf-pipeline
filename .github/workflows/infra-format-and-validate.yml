@@ -59,20 +59,12 @@ jobs:
         with:
           role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
+          aws-profile: tf-manager
 
-      - name: Setup Snowflake CLI & Connect via OIDC.
-        uses: snowflakedb/snowflake-actions@v3
-        with:
-          use-oidc: true
+      - run: |
+          # Check caller identity for dev account
+          aws sts get-caller-identity --profile dev
 
       - name: terraform init
-        env:
-          AWS_ARN_ROLE: ${{ vars.AWS_ROLE_TO_ASSUME }}
         working-directory: infra
         run: terraform init
-
-      - name: terraform plan
-        env:
-          AWS_ARN_ROLE: ${{ vars.AWS_ROLE_TO_ASSUME }}
-        working-directory: infra
-        run: terraform plan
