@@ -81,7 +81,7 @@ jobs:
       - name: Generate Terraform plan
         working-directory: ${{ env.TF_WORKING_DIR }}
         env:
-          SNOWFLAKE_ORGANIZATION_NAME: ${{ secrets.SNOWFLAKE_ORGANIZATION_NAME }}
-          SNOWFLAKE_ACCOUNT_NAME: ${{ secrets.SNOWFLAKE_ACCOUNT_NAME }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_ORGANIZATION_NAME: ${{ vars.SNOWFLAKE_ORGANIZATION_NAME }}
+          SNOWFLAKE_ACCOUNT_NAME: ${{ vars.SNOWFLAKE_ACCOUNT_NAME }}
+          SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
         run: terraform plan -input=false -no-color
