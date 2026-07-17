@@ -66,9 +66,13 @@ jobs:
           use-oidc: true
 
       - name: terraform init
+        env:
+          AWS_ARN_ROLE: ${{ vars.AWS_ROLE_TO_ASSUME }}
         working-directory: infra
         run: terraform init
 
       - name: terraform plan
+        env:
+          AWS_ARN_ROLE: ${{ vars.AWS_ROLE_TO_ASSUME }}
         working-directory: infra
         run: terraform plan
