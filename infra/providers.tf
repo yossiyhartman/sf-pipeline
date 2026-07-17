@@ -1,5 +1,3 @@
 provider "aws" {
-}
-
-provider "snowflake" {
+  region = "eu-north-1"
 }
