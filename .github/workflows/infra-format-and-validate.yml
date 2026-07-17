@@ -1,4 +1,4 @@
-name: Infrastructure format and validate
+name: Infrastructure CI
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
       - infra/**
 
 permissions:
+  id-token: write
   contents: read
 
 jobs:
@@ -41,3 +42,33 @@ jobs:
       - name: terraform validate
         working-directory: infra
         run: terraform validate
+
+  plan:
+    name: Plan
+    needs: [fmt, validate]
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Setup Snowflake CLI & Connect via OIDC.
+        uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: terraform init
+        working-directory: infra
+        run: terraform init
+
+      - name: terraform plan
+        working-directory: infra
+        run: terraform plan
