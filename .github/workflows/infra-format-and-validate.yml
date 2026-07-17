@@ -5,8 +5,6 @@ on:
     paths:
       - infra/**
   pull_request:
-    paths:
-      - infra/**
 
 permissions:
   id-token: write
