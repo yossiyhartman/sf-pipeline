@@ -80,4 +80,6 @@ jobs:
 
       - name: Generate Terraform plan
         working-directory: ${{ env.TF_WORKING_DIR }}
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
         run: terraform plan -input=false -no-color
