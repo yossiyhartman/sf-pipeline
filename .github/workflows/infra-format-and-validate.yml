@@ -1,0 +1,83 @@
+name: Terraform Infra CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - infra/**
+  pull_request:
+    paths:
+      - infra/**
+
+
+permissions:
+  id-token: write   # required for AWS OIDC role assumption
+  contents: read
+
+env:
+  TF_WORKING_DIR: infra
+  TF_IN_AUTOMATION: "true"
+
+jobs:
+  fmt:
+    name: "Lint / Terraform Format"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Check formatting (terraform fmt)
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform fmt -check -recursive -diff
+
+  validate:
+    name: "Validate / Terraform Validate"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Initialize (no backend)
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init -backend=false
+
+      - name: Validate configuration
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform validate
+
+  plan:
+    name: "Plan / Terraform Plan (dev)"
+    needs: [fmt, validate]
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Assume AWS role via OIDC
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Connect to Snowflake via OIDC
+        uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: Initialize Terraform
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: Generate Terraform plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform plan -input=false -no-color
