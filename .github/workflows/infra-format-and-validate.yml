@@ -1,5 +1,4 @@
-name: Infrastructure CI
-run-name: format and validate infrastructure
+name: Infrastructure format and validate
 
 on:
   push:
