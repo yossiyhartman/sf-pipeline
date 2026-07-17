@@ -63,7 +63,7 @@ jobs:
 
       - run: |
           # Check caller identity for dev account
-          aws sts get-caller-identity --profile dev
+          aws sts get-caller-identity --profile tf-manager
 
       - name: terraform init
         working-directory: infra
