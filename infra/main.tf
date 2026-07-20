@@ -2,7 +2,7 @@
 # #######
 
 module "warehouses" {
-  source = "../../modules/warehouses"
+  source = "./modules/warehouses"
 
   environment = var.environment
 
@@ -19,8 +19,10 @@ module "warehouses" {
 
 # Sources
 # #######
+#
 
-module "northwind" {
-  source      = "../../sources/northwind"
+module "source_northwind" {
+  source      = "./sources/northwind"
   environment = var.environment
+
 }

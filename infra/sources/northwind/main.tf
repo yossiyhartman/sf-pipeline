@@ -1,5 +1,6 @@
+
 module "source_setup" {
-  source      = "../../database_scaffold"
+  source      = "../../modules/source_db_setup"
   source_name = "northwind"
   environment = var.environment
   schemas     = var.schemas
