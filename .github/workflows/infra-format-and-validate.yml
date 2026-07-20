@@ -76,7 +76,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform init
+        run: terraform init -backend-config="envs/dev/backend.tf"
 
       - name: Generate Terraform plan
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -84,4 +84,4 @@ jobs:
           SNOWFLAKE_ORGANIZATION_NAME: ${{ vars.SNOWFLAKE_ORGANIZATION_NAME }}
           SNOWFLAKE_ACCOUNT_NAME: ${{ vars.SNOWFLAKE_ACCOUNT_NAME }}
           SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
-        run: terraform plan -input=false -no-color
+        run: terraform plan -input=false -no-color -var-file="envs/dev/terraform.tfvars"
