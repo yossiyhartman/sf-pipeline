@@ -1,9 +1,8 @@
-
 # Shared
 # #######
 
 module "warehouses" {
-  source = "./modules/warehouses"
+  source = "../../modules/warehouses"
 
   environment = var.environment
 
@@ -22,7 +21,6 @@ module "warehouses" {
 # #######
 
 module "northwind" {
-  source = "./sources/northwind"
-
+  source      = "../../sources/northwind"
   environment = var.environment
 }
