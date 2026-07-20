@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  init:
+    desc: no description available
+    cmd: terraform init -backend=false
+
+  validate:
+    desc: no description available
+    cmd: terraform validate
+
+  format:
+    desc: no description available
+    cmd: terraform fmt -recursive
+
+  lint:
+    desc: no description available
+    cmd: echo "No linting is setup"
+
+  pre-commit-prep:
+    desc: no description available
+    cmds:
+      - task: format
+      - task: lint
+      - task: init
+      - task: validate
