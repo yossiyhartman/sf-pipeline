@@ -15,14 +15,12 @@ on:
     paths:
       - infra/**
 
-
 permissions:
-  id-token: write   # required for AWS OIDC role assumption
+  id-token: write
   contents: read
 
 env:
   TF_WORKING_DIR: infra
-  TF_IN_AUTOMATION: "true"
 
 jobs:
   fmt:
@@ -58,7 +56,7 @@ jobs:
         run: terraform validate
 
   plan:
-    name: "Plan / Terraform Plan (dev)"
+    name: "Plan / Terraform Plan"
     needs: [fmt, validate]
     environment: dev
     runs-on: ubuntu-latest
@@ -90,4 +88,54 @@ jobs:
           SNOWFLAKE_ORGANIZATION_NAME: ${{ vars.SNOWFLAKE_ORGANIZATION_NAME }}
           SNOWFLAKE_ACCOUNT_NAME: ${{ vars.SNOWFLAKE_ACCOUNT_NAME }}
           SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
-        run: terraform plan -input=false -no-color -var-file="envs/dev/terraform.tfvars"
+        run: terraform plan -input=false -no-color -var-file="envs/dev/terraform.tfvars" -out=tfplan.out
+
+      - name: Upload plan artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}/tfplan.out
+          retention-days: 1
+
+  apply:
+    name: "Apply / Terraform Apply"
+    needs: [fmt, validate, plan]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Assume AWS role via OIDC
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Connect to Snowflake via OIDC
+        uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: Initialize Terraform
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init -backend-config="envs/dev/backend.tf"
+
+      - name: Download plan artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}
+
+      - name: Apply Terraform plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        env:
+          SNOWFLAKE_ORGANIZATION_NAME: ${{ vars.SNOWFLAKE_ORGANIZATION_NAME }}
+          SNOWFLAKE_ACCOUNT_NAME: ${{ vars.SNOWFLAKE_ACCOUNT_NAME }}
+          SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+        run: terraform apply -input=false -no-color -auto-approve tfplan.out
