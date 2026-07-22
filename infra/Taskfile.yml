@@ -26,3 +26,7 @@ tasks:
       - task: lint
       - task: init
       - task: validate
+
+  plan:
+    desc: no description available
+    cmd: terraform plan -var-file='envs/dev/terraform.tfvars' -out=tfplan.out
