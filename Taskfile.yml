@@ -2,15 +2,8 @@
 
 version: '3'
 
-dotenv:
-  - .env
 
 includes:
   tf:
     taskfile: ./infra/Taskfile.yml
     dir: ./infra
-
-
-tasks:
-  env:
-    cmd: printenv
