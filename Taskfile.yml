@@ -2,8 +2,11 @@
 
 version: '3'
 
-
 includes:
   tf:
     taskfile: ./infra/Taskfile.yml
     dir: ./infra
+
+  dbt:
+    taskfile: ./dbt/Taskfile.yml
+    dir: ./dbt

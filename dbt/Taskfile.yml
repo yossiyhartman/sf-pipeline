@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+env:
+  DBT_PROFILES_DIR: '{{.TASKFILE_DIR}}'
+
+tasks:
+  deps:
+    desc: no description available
+    cmd: uv run dbt deps
+
+  debug:
+    desc: no description available
+    cmd: uv run dbt debug
+
+  run:
+    desc: no description available
+    cmd: uv run dbt run
+
+  test:
+    desc: no description available
+    cmd: uv run dbt test
+
+  build:
+    desc: no description available
+    cmd: uv run dbt build
+
+  docs-generate:
+    desc: no description available
+    cmd: uv run dbt docs generate
+
+  docs-serve:
+    desc: no description available
+    cmd: uv run dbt docs serve

@@ -1,0 +1,15 @@
+sf_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+
+      account: <change-me>
+      user: <change-me>
+      role: <change-me>
+
+      warehouse: ADHOC_WH_DEV
+      database: NORTHWIND_DEV
+      schema: STAGING
+
+      threads: 4
