@@ -1,7 +1,9 @@
 
 module "source_setup" {
-  source      = "../../modules/source_db_setup"
-  source_name = "northwind"
+  source = "../../modules/initialise-database"
+
   environment = var.environment
-  schemas     = var.schemas
+
+  source_name = "northwind"
+  schemas     = ["LANDING", "STAGING", "INTERMEDIATE", "MARTS"]
 }

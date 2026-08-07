@@ -14,13 +14,13 @@ variable "environment" {
 }
 
 variable "schemas" {
-  description = "Schemas to create in this source's database. Must include \"RAW\" — that's where the landing stage/file format are created."
+  description = "Schemas to create in this source's database. Must include \"LANDING\" — that's where the landing stage/file format are created."
   type        = list(string)
-  default     = ["RAW", "STAGING", "INTERMEDIATE", "MARTS"]
+  default     = ["LANDING", "STAGING", "INTERMEDIATE", "MARTS"]
 
   validation {
-    condition     = contains(var.schemas, "RAW")
-    error_message = "schemas must include \"RAW\" so raw data has somewhere to land."
+    condition     = contains(var.schemas, "LANDING")
+    error_message = "schemas must include \"LANDING\" so LANDING data has somewhere to land."
   }
 }
 

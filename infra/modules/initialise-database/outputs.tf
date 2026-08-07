@@ -3,6 +3,6 @@ output "database_name" {
 }
 
 output "schema_names" {
-  description = "Map of schema key (e.g. \"RAW\") -> schema name."
+  description = "Map of schema key (e.g. \"LANDING\") -> schema name."
   value       = { for k, s in snowflake_schema.this : k => s.name }
 }
