@@ -22,5 +22,4 @@ module "warehouses" {
 module "source_northwind" {
   source      = "./sources/northwind"
   environment = var.environment
-
 }
