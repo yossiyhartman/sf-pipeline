@@ -7,8 +7,3 @@ variable "environment" {
     error_message = "environment must be one of: dev, staging, prod."
   }
 }
-
-variable "temp_password" {
-  description = "temp_password"
-  sensitive   = true
-}
