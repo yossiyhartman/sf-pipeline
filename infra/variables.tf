@@ -10,4 +10,5 @@ variable "environment" {
 
 variable "temp_password" {
   description = "temp_password"
+  sensitive   = true
 }
