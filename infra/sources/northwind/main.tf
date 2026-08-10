@@ -37,8 +37,8 @@ resource "snowflake_file_format_csv" "csv_format" {
 
 resource "snowflake_stage_internal" "internal_stage" {
   name     = "${local.source_name}_STAGE"
-  database = module.database_scaffold.database_name
-  schema   = module.database_scaffold.schema_names["LANDING"].fully_qualified_name
+  database = module.database_scaffold.database_name.fully_qualified_name
+  schema   = module.database_scaffold.schema_names["LANDING"]
 
   file_format {
     format_name = snowflake_file_format_csv.csv_format.fully_qualified_name
