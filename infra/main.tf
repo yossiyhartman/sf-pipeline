@@ -11,7 +11,6 @@ module "warehouses" {
     loading      = { size = "XSMALL", auto_suspend = 60 /* seconds */ }
     transforming = { size = "XSMALL", auto_suspend = 60 /* seconds */ }
     reporting    = { size = "XSMALL", auto_suspend = 60 /* seconds */ }
-
   }
 }
 
