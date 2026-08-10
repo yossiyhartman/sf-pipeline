@@ -4,9 +4,15 @@
 
         {{ target.schema }}
 
+    {%- elif target.name == 'prod' -%}
+
+        {# prod is the shared "general" target: bare layer schemas (STAGING, MARTS, ...), no per-run prefix. #}
+        {{ custom_schema_name | trim }}
+
     {%- else -%}
 
-        {{ custom_schema_name | trim }}
+        {# dev/ci: prefix with target.schema so personal runs and per-PR CI runs never collide with each other or with prod. #}
+        {{ target.schema }}_{{ custom_schema_name | trim }}
 
     {%- endif -%}
 

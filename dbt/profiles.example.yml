@@ -1,0 +1,63 @@
+# Template only — not read by dbt directly.
+#
+# For local development: copy the `dev` block below into ~/.dbt/profiles.yml
+# (see dbt/profiles.yml in this repo for a ready-made personal copy) and
+# export the referenced env vars. Never fill in real values here — this
+# file is committed to git.
+#
+# `ci` and `prod` are documented here for reference; they're driven by
+# GitHub Actions secrets/vars, not by anything a developer sets locally.
+
+sf_pipeline:
+  target: dev
+  outputs:
+
+    # Personal sandbox. One dev target shared by everyone — isolation comes
+    # from DBT_SCHEMA, not from a separate profile per person.
+    dev:
+      type: snowflake
+
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+
+      warehouse: ADHOC_WH_DEV
+      database: NORTHWIND_DEV
+      # Personal prefix, e.g. DBT_YOSSI — models land in DBT_YOSSI_STAGING,
+      # DBT_YOSSI_MARTS, etc. (see generate_schema_name.sql). Pick something
+      # unique to you so you never collide with a colleague's schemas.
+      schema: "{{ env_var('DBT_SCHEMA') }}"
+
+      threads: 4
+
+    # Used by GitHub Actions when testing pull requests. Writes into a
+    # PR-scoped schema (e.g. CI_PR_123) so concurrent PR runs and personal
+    # dev runs never collide. The schema is dropped after the run.
+    ci:
+      type: snowflake
+
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_CI_USER') }}"
+      role: "{{ env_var('SNOWFLAKE_CI_ROLE') }}"
+
+      warehouse: ADHOC_WH_DEV
+      database: NORTHWIND_DEV
+      schema: "{{ env_var('DBT_SCHEMA') }}"
+
+      threads: 4
+
+    # Used only by the merge-to-main deploy job. Writes into the bare
+    # "general" layer schemas (STAGING, INTERMEDIATE, MARTS) — no prefix.
+    # Nobody should run `dbt run --target prod` from a laptop.
+    prod:
+      type: snowflake
+
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_PROD_USER') }}"
+      role: "{{ env_var('SNOWFLAKE_PROD_ROLE') }}"
+
+      warehouse: ADHOC_WH_PROD
+      database: NORTHWIND_PROD
+      schema: GENERAL
+
+      threads: 4
