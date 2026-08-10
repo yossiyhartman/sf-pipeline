@@ -14,15 +14,3 @@ tasks:
   format:
     desc: no description available
     cmd: terraform fmt -recursive
-
-  lint:
-    desc: no description available
-    cmd: echo "No linting is setup"
-
-  pre-commit-prep:
-    desc: no description available
-    cmds:
-      - task: format
-      - task: lint
-      - task: init
-      - task: validate

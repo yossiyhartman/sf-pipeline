@@ -2,6 +2,10 @@
 
 version: '3'
 
+
+dotenv:
+  - .env
+
 includes:
   tf:
     taskfile: ./infra/Taskfile.yml
