@@ -3,14 +3,18 @@
 version: '3'
 
 tasks:
-  init:
-    desc: no description available
-    cmd: terraform init -backend=false
-
   validate:
-    desc: no description available
-    cmd: terraform validate
+    desc: Validates all the files in the infra directory.
+    cmd: terraform validate  -no-tests
 
   format:
-    desc: no description available
-    cmd: terraform fmt -recursive
+    desc: Format all .tf files in the infra/ directory.
+    cmd: terraform fmt -recursive -diff
+
+  init-dev:
+    desc: Initialises the infrastructure with the `DEV` environment configuration.
+    cmd: terraform init -backend-config="envs/dev/backend.hcl"
+
+  plan-dev:
+    desc: runs a terraform plan with the `DEV` environment configuration selected.
+    cmd: terraform plan -var-file="envs/dev/terraform.tfvars"
