@@ -2,11 +2,13 @@
 name = "sf-pipeline"
 version = "0.1.0"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+]
 
 [dependency-groups]
 dev = [
     "commitizen>=4.16.5",
     "dbt-snowflake>=1.12.0",
     "prek>=0.4.10",
+    "sqruff>=0.39.0",
 ]
