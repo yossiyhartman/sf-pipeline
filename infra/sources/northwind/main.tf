@@ -24,14 +24,17 @@ resource "snowflake_file_format_csv" "csv_format" {
   schema   = module.database_scaffold.schema_names[local.name_ingestion_layer].name
   name     = "${local.source_name}_CSV_INGESTION_FORMAT"
 
-  compression      = "NONE"
-  field_delimiter  = ","
-  multi_line       = "true"
-  file_extension   = ".csv"
-  skip_header      = 1
-  skip_blank_lines = "true"
-  encoding         = "UTF8"
-  comment          = "My CSV file format"
+  compression                    = "NONE"
+  field_delimiter                = ","
+  field_optionally_enclosed_by   = "\""
+  multi_line                     = "true"
+  file_extension                 = ".csv"
+  skip_header                    = 1
+  skip_blank_lines               = "true"
+  encoding                       = "UTF8"
+  error_on_column_count_mismatch = "false"
+  empty_field_as_null            = "true"
+  comment                        = "Northwind CSV ingestion format"
 }
 
 resource "snowflake_stage_internal" "ingestion_stage" {
