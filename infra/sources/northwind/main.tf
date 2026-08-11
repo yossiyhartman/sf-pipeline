@@ -1,5 +1,6 @@
 locals {
-  source_name = "NORTHWIND"
+  source_name          = "NORTHWIND"
+  name_ingestion_layer = "LANDING"
 }
 
 # Scaffold a project
@@ -11,7 +12,7 @@ module "database_scaffold" {
   environment = var.environment
 
   source_name = local.source_name
-  schemas     = ["LANDING", "STAGING", "INTERMEDIATE", "MARTS"]
+  schemas     = [local.name_ingestion_layer, "STAGING", "INTERMEDIATE", "MARTS"]
 }
 
 # Setup the ingestion
@@ -20,7 +21,7 @@ module "database_scaffold" {
 
 resource "snowflake_file_format_csv" "csv_format" {
   database = module.database_scaffold.database_name.fully_qualified_name
-  schema   = "LANDING"
+  schema   = module.database_scaffold.schema_names[local.name_ingestion_layer].name
   name     = "${local.source_name}_CSV_INGESTION_FORMAT"
 
   compression      = "NONE"
@@ -33,10 +34,10 @@ resource "snowflake_file_format_csv" "csv_format" {
   comment          = "My CSV file format"
 }
 
-resource "snowflake_stage_internal" "landing_stage" {
+resource "snowflake_stage_internal" "ingestion_stage" {
   name     = "${local.source_name}_STAGE"
   database = module.database_scaffold.database_name.fully_qualified_name
-  schema   = module.database_scaffold.schema_names["LANDING"]
+  schema   = module.database_scaffold.schema_names[local.name_ingestion_layer].name
 
   file_format {
     format_name = snowflake_file_format_csv.csv_format.fully_qualified_name
