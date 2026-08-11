@@ -14,8 +14,3 @@ includes:
   dbt:
     taskfile: ./dbt/Taskfile.yml
     dir: ./dbt
-
-
-tasks:
-  envs:
-    cmd: printenv
