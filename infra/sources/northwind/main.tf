@@ -1,5 +1,3 @@
-
-
 locals {
   source_name = "NORTHWIND"
 }
@@ -35,7 +33,7 @@ resource "snowflake_file_format_csv" "csv_format" {
   comment          = "My CSV file format"
 }
 
-resource "snowflake_stage_internal" "internal_stage" {
+resource "snowflake_stage_internal" "landing_stage" {
   name     = "${local.source_name}_STAGE"
   database = module.database_scaffold.database_name.fully_qualified_name
   schema   = module.database_scaffold.schema_names["LANDING"]
