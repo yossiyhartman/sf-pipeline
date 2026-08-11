@@ -5,7 +5,7 @@ version: '3'
 tasks:
   validate:
     desc: Validates all the files in the infra directory.
-    cmd: terraform validate  -no-tests
+    cmd: terraform validate -no-tests
 
   format:
     desc: Format all .tf files in the infra/ directory.
