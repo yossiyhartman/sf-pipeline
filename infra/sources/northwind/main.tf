@@ -34,6 +34,7 @@ resource "snowflake_file_format_csv" "csv_format" {
   encoding                       = "UTF8"
   error_on_column_count_mismatch = "false"
   empty_field_as_null            = "true"
+  null_if                        = ["NULL", ""]
   comment                        = "Northwind CSV ingestion format"
 }
 
