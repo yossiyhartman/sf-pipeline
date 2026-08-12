@@ -13,10 +13,10 @@ CREATE OR REPLACE TABLE NORTHWIND_DEV.LANDING.EMPLOYEES (
     COUNTRY varchar(100),
     HOMEPHONE varchar(100),
     "EXTENSION" varchar(100),
-    PHOTO varchar(100),
-    NOTES varchar(100),
+    PHOTO STRING,
+    NOTES STRING,
     REPORTSTO varchar(100),
-    PHOTOPATH varchar(100)
+    PHOTOPATH STRING
 
 );
 

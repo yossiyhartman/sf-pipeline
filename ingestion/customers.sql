@@ -20,7 +20,15 @@ FROM
         $1,
         $2,
         $3,
-        $4
+        $4,
+        $5,
+        $6,
+        $7,
+        $8,
+        $9,
+        $10,
+        $11
+        
     FROM @NORTHWIND_DEV.LANDING.NORTHWIND_STAGE/customers.csv
 )
 ON_ERROR = abort_statement
