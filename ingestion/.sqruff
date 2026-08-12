@@ -1,0 +1,46 @@
+[sqruff]
+verbose = 1
+dialect = snowflake
+templater = raw
+rules = all
+exclude_rules =
+max_line_length = 200
+
+[sqruff:indentation]
+indent_unit = space
+tab_space_size = 4
+indented_joins = False
+indented_ctes = False
+indented_using_on = True
+indented_on_contents = True
+indented_then = True
+indented_then_contents = True
+allow_implicit_indents = False
+template_blocks_indent = True
+
+
+[sqruff:rules:layout.select_targets]
+wildcard_policy = single
+
+
+[sqruff:layout:type:alias_expression]
+spacing_before = align
+align_within = select_clause
+align_scope = bracketed
+
+
+[sqruff:rules:capitalisation.keywords]
+capitalisation_policy = upper
+
+[sqruff:rules:capitalisation.identifiers]
+extended_capitalisation_policy = upper
+
+[sqruff:rules:capitalisation.functions]
+extended_capitalisation_policy = upper
+
+[sqruff:rules:capitalisation.literals]
+capitalisation_policy = upper
+
+
+[sqruff:rules:layout.commas]
+line_position = trailing
