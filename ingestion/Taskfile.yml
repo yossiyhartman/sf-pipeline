@@ -4,7 +4,7 @@ version: '3'
 
 tasks:
   format:
-    cmd: sqruff fix -f human --dialect snowflake .
+    cmd: sqruff fix -f human .
 
   lint:
-    cmd: sqruff lint -f human --dialect snowflake .
+    cmd: sqruff lint -f human .

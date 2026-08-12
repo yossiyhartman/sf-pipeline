@@ -1,16 +1,40 @@
-create
-or replace table NORTHWIND_DEV.LANDING.REGIONS (
-    REGIONID INTEGER primary key,
-    DESCRIPTION varchar(50)
+CREATE OR REPLACE TABLE NORTHWIND_DEV.LANDING.ORDERS (
+    ORDERID INTEGER PRIMARY KEY,
+    CUSTOMERID VARCHAR(100),
+    EMPLOYEEID INTEGER,
+    ORDERDATE DATETIME,
+    REQUIREDDATE DATETIME,
+    SHIPPEDDATE DATETIME,
+    SHIPVIA INTEGER,
+    FREIGHT FLOAT,
+    SHIPNAME VARCHAR(100),
+    SHIPADDRESS VARCHAR(100),
+    SHIPCITY VARCHAR(100),
+    SHIPREGION VARCHAR(100),
+    SHIPPOSTALCODE VARCHAR(100),
+    SHIPCOUNTRY VARCHAR(100)
 );
-copy into NORTHWIND_DEV.LANDING.REGIONS
-from
-    (
-        select
-            $1,
-            $2
-        from
-            @NORTHWIND_DEV.LANDING.NORTHWIND_STAGE/regions.csv
-    ) on_error = abort_statement file_format = (
-        format_name = NORTHWIND_DEV.LANDING.NORTHWIND_CSV_INGESTION_FORMAT
-    );
+
+
+COPY INTO NORTHWIND_DEV.LANDING.ORDERS
+FROM
+(
+    SELECT
+        $1,
+        $2,
+        $3,
+        $4,
+        $5,
+        $6,
+        $7,
+        $8,
+        $9,
+        $10,
+        $11,
+        $12,
+        $13,
+        $14
+    FROM @NORTHWIND_DEV.LANDING.NORTHWIND_STAGE/orders.csv
+)
+ON_ERROR = abort_statement
+FILE_FORMAT = (FORMAT_NAME = NORTHWIND_DEV.LANDING.NORTHWIND_CSV_INGESTION_FORMAT);
