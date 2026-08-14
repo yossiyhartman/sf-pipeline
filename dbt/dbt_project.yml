@@ -1,7 +1,7 @@
-name: 'sf_pipeline'
+name: 'northwind'
 version: '1.0.0'
 
-profile: 'sf_pipeline'
+profile: 'northwind'
 
 model-paths: ['models']
 seed-paths: ['seeds']
@@ -14,7 +14,7 @@ clean-targets:
   - dbt_packages
 
 models:
-  sf_pipeline:
+  northwind:
 
     staging:
       +materialized: view
