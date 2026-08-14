@@ -18,3 +18,18 @@ northwind:
       schema: "{{ env_var('UNIQUE_SCHEMA_PREFIX') }}"
 
       threads: 4
+
+    ci:
+      type: snowflake
+
+      account: "{{ env_var('SNOWFLAKE_ORGANIZATION_NAME') }}-{{ env_var('SNOWFLAKE_ACCOUNT_NAME') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+
+      warehouse: ADHOC_WH_DEV
+      database: NORTHWIND_DEV
+
+      # isolates each PR's build from every other PR and from local dev work
+      schema: "CI_{{ env_var('PR_NUMBER') }}"
+
+      threads: 4

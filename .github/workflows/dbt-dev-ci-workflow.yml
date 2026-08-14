@@ -1,0 +1,106 @@
+name: dbt CI
+run-name: >-
+  ${{
+    github.event_name == 'pull_request'
+      && format('PR #{0}: {1}', github.event.pull_request.number, github.event.pull_request.title)
+      || format('Push to {0} by @{1}', github.ref_name, github.actor)
+  }}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - dbt/**
+  pull_request:
+    paths:
+      - dbt/**
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  DBT_PROFILES_DIR: ./dbt
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+
+jobs:
+
+  lint:
+    name: "Lint / sqruff"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Lint SQL (sqruff)
+        working-directory: dbt
+        run: uv run sqruff -f github-annotation-native lint models/ macros/ tests/
+
+  build-test:
+    name: "Build & Test / dbt build"
+    needs: [lint]
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Connect to Snowflake via OIDC
+        uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: dbt build (isolated PR schema)
+        working-directory: dbt
+        env:
+          SNOWFLAKE_ORGANIZATION_NAME: ${{ vars.SNOWFLAKE_ORGANIZATION_NAME }}
+          SNOWFLAKE_ACCOUNT_NAME: ${{ vars.SNOWFLAKE_ACCOUNT_NAME }}
+          SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+        run: uv run dbt build --target ci
+
+  cleanup:
+    name: "Cleanup / drop PR schema(s)"
+    if: always()
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Connect to Snowflake via OIDC
+        uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: Drop CI schemas for this PR
+        working-directory: dbt
+        env:
+          SNOWFLAKE_ORGANIZATION_NAME: ${{ vars.SNOWFLAKE_ORGANIZATION_NAME }}
+          SNOWFLAKE_ACCOUNT_NAME: ${{ vars.SNOWFLAKE_ACCOUNT_NAME }}
+          SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+        run: uv run dbt run-operation drop_ci_schema --target ci
