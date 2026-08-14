@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: northwind
+    database: "{{ target.database }}"
+    schema: LANDING
+    tables:
+      - name: orders
+        columns:
+          - name: ORDERID
+          - name: CUSTOMERID
+          - name: EMPLOYEEID
+          - name: ORDERDATE
+          - name: REQUIREDDATE
+          - name: SHIPPEDDATE
+          - name: SHIPVIA
+          - name: FREIGHT
+          - name: SHIPNAME
+          - name: SHIPADDRESS
+          - name: SHIPCITY
+          - name: SHIPREGION
+          - name: SHIPPOSTALCODE
+          - name: SHIPCOUNTRY

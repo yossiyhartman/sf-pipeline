@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: northwind
+    database: "{{ target.database }}"
+    schema: LANDING
+    tables:
+      - name: territories
+        columns:
+          - name: TERRITORYID
+          - name: DESCRIPTION
+          - name: REGIONID

@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: northwind
+    database: "{{ target.database }}"
+    schema: LANDING
+    tables:
+      - name: employees
+        columns:
+          - name: EMPLOYEEID
+          - name: LASTNAME
+          - name: FIRSTNAME
+          - name: TITLE
+          - name: TITLEOFCOURTESY
+          - name: BIRTHDATE
+          - name: HIREDATE
+          - name: ADDRESS
+          - name: CITY
+          - name: REGION
+          - name: POSTALCODE
+          - name: COUNTRY
+          - name: HOMEPHONE
+          - name: EXTENSION
+          - name: PHOTO
+          - name: NOTES
+          - name: REPORTSTO
+          - name: PHOTOPATH

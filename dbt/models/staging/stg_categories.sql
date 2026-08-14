@@ -1,0 +1,7 @@
+SELECT
+    CATEGORYID   AS CATEGORY_ID,
+    CATEGORYNAME AS CATEGORY_NAME,
+    DESCRIPTION,
+    PICTURE
+
+FROM {{ source('northwind', 'categories') }}

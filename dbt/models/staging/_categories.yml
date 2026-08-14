@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: northwind
+    database: "{{ target.database }}"
+    schema: LANDING
+    tables:
+      - name: categories
+        columns:
+          - name: CATEGORYID
+          - name: CATEGORYNAME
+          - name: DESCRIPTION
+          - name: PICTURE

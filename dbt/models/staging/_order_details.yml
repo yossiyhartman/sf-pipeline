@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: northwind
+    database: "{{ target.database }}"
+    schema: LANDING
+    tables:
+      - name: order_details
+        columns:
+          - name: ORDERID
+          - name: PRODUCTID
+          - name: UNITPRICE
+          - name: QUANTITY
+          - name: DISCOUNT

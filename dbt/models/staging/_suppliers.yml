@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: northwind
+    database: "{{ target.database }}"
+    schema: LANDING
+    tables:
+      - name: suppliers
+        columns:
+          - name: SUPPLIERID
+          - name: COMPANYNAME
+          - name: CONTACTNAME
+          - name: CONTACTTITLE
+          - name: ADDRESS
+          - name: CITY
+          - name: REGION
+          - name: POSTALCODE
+          - name: COUNTRY
+          - name: PHONE
+          - name: FAX
+          - name: HOMEPAGE

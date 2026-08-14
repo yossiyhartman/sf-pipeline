@@ -5,4 +5,7 @@ sources:
     database: "{{ target.database }}"
     schema: LANDING
     tables:
-      - name: customers
+      - name: employee_territories
+        columns:
+          - name: EMPLOYEEID
+          - name: TERRITORYID

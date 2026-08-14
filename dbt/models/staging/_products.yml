@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: northwind
+    database: "{{ target.database }}"
+    schema: LANDING
+    tables:
+      - name: products
+        columns:
+          - name: PRODUCTID
+          - name: PRODUCTNAME
+          - name: SUPPLIERID
+          - name: CATEGORYID
+          - name: QUANTITYPERUNIT
+          - name: UNITPRICE
+          - name: UNITSINSTOCK
+          - name: UNITSONORDER
+          - name: REORDERLEVEL
+          - name: DISCONTINUED
