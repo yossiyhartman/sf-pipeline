@@ -1,0 +1,20 @@
+northwind:
+  target: dev
+  outputs:
+
+    dev:
+      type: snowflake
+
+      account: "{{ env_var('SNOWFLAKE_ORGANIZATION_NAME') }}-{{ env_var('SNOWFLAKE_ACCOUNT_NAME') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      password: "{{ env_var('SNOWFLAKE_PAT') }}"
+
+      warehouse: ADHOC_WH_DEV
+      database: NORTHWIND_DEV
+
+      # in the .env set this variable to an unique identifier
+      # such that you don't accidentaly overwrite work of other developers
+      schema: "{{ env_var('UNIQUE_SCHEMA_PREFIX') }}"
+
+      threads: 4

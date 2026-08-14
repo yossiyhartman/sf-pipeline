@@ -6,30 +6,18 @@ env:
   DBT_PROFILES_DIR: '{{.TASKFILE_DIR}}'
 
 tasks:
-  deps:
-    desc: no description available
-    cmd: uv run dbt deps
 
-  debug:
-    desc: no description available
-    cmd: uv run dbt debug
+  format:
+    cmd: sqruff fix -f human macros/ models/ tests/
+
+  lint:
+    cmd: sqruff lint -f human models/ macros/ tests/
+
+  compile:
+    cmd: dbt compile
 
   run:
-    desc: no description available
-    cmd: uv run dbt run
+    cmd: dbt run
 
-  test:
-    desc: no description available
-    cmd: uv run dbt test
-
-  build:
-    desc: no description available
-    cmd: uv run dbt build
-
-  docs-generate:
-    desc: no description available
-    cmd: uv run dbt docs generate
-
-  docs-serve:
-    desc: no description available
-    cmd: uv run dbt docs serve
+  debug:
+    cmd: dbt debug
