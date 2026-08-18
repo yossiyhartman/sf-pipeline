@@ -18,3 +18,7 @@ tasks:
   plan-dev:
     desc: runs a terraform plan with the `DEV` environment configuration selected.
     cmd: terraform plan -var-file="envs/dev/terraform.tfvars"
+
+  destroy-def:
+    desc: run a terraform destroy of the `DEV` environment.
+    cmd: terraform destroy -var-file="envs/dev/terraform.tfvars"
