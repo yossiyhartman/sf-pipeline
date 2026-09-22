@@ -8,3 +8,21 @@ tasks:
 
   lint:
     cmd: sqruff lint -f human .
+
+  ingest:
+    desc: Runs every SQL file in `ingestion/` against Snowflake using the Snowflake CLI.
+    method: none
+    cmds:
+      - for: sources
+        cmd: >-
+          snow --config-file {{.USER_WORKING_DIR}}/snowflake/config.toml sql -f "{{.ITEM}}"
+
+    sources:
+      - "*.sql"
+
+
+  info:
+    cmds:
+      - echo "Root {{.ROOT_DIR}}"
+      - echo "Current {{.TASKFILE_DIR}}"
+      - echo "Working {{.USER_WORKING_DIR}}"

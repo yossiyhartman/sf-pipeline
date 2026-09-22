@@ -1,0 +1,12 @@
+default_connection_name = <changeme>
+
+[connections]
+[connections.<changeme>]
+account = "changeme"
+password = "changeme"
+authenticator = "changeme"
+user = "changeme"
+role = "changeme"
+
+[cli.logs]
+save_logs = false
