@@ -1,10 +1,23 @@
 # Snowflake CLI connections, one per environment. Copy this file to
-# connections.toml, fill in real credentials, and keep it out of git
-# (connections.toml is gitignored). `database` scopes every unqualified
-# statement in sql/ to the right environment, so `--connection <env>` is
-# the only thing that needs to change between dev/tst/prd.
-[connections]
-[connections.dev]
+# connections.toml and fill in real credentials (connections.toml is
+# gitignored).
+#
+# Note the shape: a standalone connections.toml has each connection as a
+# TOP-LEVEL table ([dev], [tst], [prd]) -- no [connections] wrapper, which
+# is only used for the [connections.*] tables embedded inside config.toml.
+#
+# Nothing in sql/ or dbt/ points at this file directly. The repo's root
+# Taskfile.yml sets SNOWFLAKE_HOME to the repo root, so `snow` finds this
+# file automatically; which connection is "active" is then whatever
+# SNOWFLAKE_DEFAULT_CONNECTION_NAME is set to (see .env.example), letting
+# local dev and CI (where that variable points at an OIDC-backed
+# connection instead) share the exact same commands.
+#
+# `database` scopes every unqualified statement in sql/ to the right
+# environment, so switching SNOWFLAKE_DEFAULT_CONNECTION_NAME is the only
+# thing that needs to change between dev/tst/prd.
+
+[dev]
 account = "changeme"
 user = "changeme"
 password = "changeme"
@@ -12,7 +25,7 @@ authenticator = "changeme"
 role = "changeme"
 database = "NORTHWIND_DEV"
 
-[connections.tst]
+[tst]
 account = "changeme"
 user = "changeme"
 password = "changeme"
@@ -20,13 +33,10 @@ authenticator = "changeme"
 role = "changeme"
 database = "NORTHWIND_TST"
 
-[connections.prd]
+[prd]
 account = "changeme"
 user = "changeme"
 password = "changeme"
 authenticator = "changeme"
 role = "changeme"
 database = "NORTHWIND_PRD"
-
-[cli.logs]
-save_logs = false

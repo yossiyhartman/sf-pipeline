@@ -3,9 +3,10 @@
 version: '3'
 
 vars:
-  # Target environment: dev | tst | prd. Selects the matching named connection
-  # in connections.toml, whose `database` default scopes every unqualified
-  # statement to the right database.
+  # Only used to pick the warehouse literal for deploy-tasks below (dev |
+  # tst | prd). Which Snowflake connection is used is NOT controlled here
+  # -- it's whatever SNOWFLAKE_DEFAULT_CONNECTION_NAME currently points at
+  # (see .env.example), so make sure the two agree with each other.
   ENV: '{{.ENV | default "dev"}}'
 
 tasks:
@@ -16,38 +17,34 @@ tasks:
     cmd: sqruff lint -f human .
 
   create-tables:
-    desc: Creates any missing tables in the {{.ENV}} environment.
+    desc: Creates any missing tables against the currently active connection.
     method: none
     cmds:
       - for: sources
-        cmd: >-
-          snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}} sql -f "{{.ITEM}}"
+        cmd: snow sql -f "{{.ITEM}}"
     sources:
       - "create-tables/*.sql"
 
   create-load-procedures:
-    desc: Deploys the LOAD_* stored procedures to the {{.ENV}} environment.
+    desc: Deploys the LOAD_* stored procedures to the currently active connection.
     method: none
     cmds:
       - for: sources
-        cmd: >-
-          snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}} sql -f "{{.ITEM}}"
+        cmd: snow sql -f "{{.ITEM}}"
     sources:
       - "load-tables/*.sql"
 
   load:
-    desc: Calls LANDING.LOAD_ALL() to run the full load against the {{.ENV}} environment.
-    cmd: >-
-      snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}} sql -q "CALL LANDING.LOAD_ALL();"
+    desc: Calls LANDING.LOAD_ALL() to run the full load against the currently active connection.
+    cmd: snow sql -q "CALL LANDING.LOAD_ALL();"
 
   deploy-tasks:
-    desc: Deploys the Snowflake TASK objects to the {{.ENV}} environment, created suspended.
+    desc: Deploys the Snowflake TASK objects to the currently active connection, created suspended.
     method: none
     cmds:
       - for: sources
         cmd: >-
-          snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}}
-          sql -D "warehouse=LOADING_WH_{{.ENV | upper}}" -f "{{.ITEM}}"
+          snow sql -D "warehouse=LOADING_WH_{{.ENV | upper}}" -f "{{.ITEM}}"
     sources:
       - "tasks/*.sql"
 

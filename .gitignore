@@ -3,3 +3,8 @@
 .claude
 .venv
 connections.toml
+
+# snow CLI artifacts, written here since SNOWFLAKE_HOME points at the repo root
+config.toml
+.cli_version.cache
+logs/
