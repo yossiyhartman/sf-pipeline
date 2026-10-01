@@ -1,0 +1,32 @@
+# Snowflake CLI connections, one per environment. Copy this file to
+# connections.toml, fill in real credentials, and keep it out of git
+# (connections.toml is gitignored). `database` scopes every unqualified
+# statement in sql/ to the right environment, so `--connection <env>` is
+# the only thing that needs to change between dev/tst/prd.
+[connections]
+[connections.dev]
+account = "changeme"
+user = "changeme"
+password = "changeme"
+authenticator = "changeme"
+role = "changeme"
+database = "NORTHWIND_DEV"
+
+[connections.tst]
+account = "changeme"
+user = "changeme"
+password = "changeme"
+authenticator = "changeme"
+role = "changeme"
+database = "NORTHWIND_TST"
+
+[connections.prd]
+account = "changeme"
+user = "changeme"
+password = "changeme"
+authenticator = "changeme"
+role = "changeme"
+database = "NORTHWIND_PRD"
+
+[cli.logs]
+save_logs = false
