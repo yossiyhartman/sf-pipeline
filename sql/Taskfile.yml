@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+vars:
+  # Target environment: dev | tst | prd. Selects the matching named connection
+  # in connections.toml, whose `database` default scopes every unqualified
+  # statement to the right database.
+  ENV: '{{.ENV | default "dev"}}'
+
+tasks:
+  format:
+    cmd: sqruff fix -f human .
+
+  lint:
+    cmd: sqruff lint -f human .
+
+  create-tables:
+    desc: Creates any missing tables in the {{.ENV}} environment.
+    method: none
+    cmds:
+      - for: sources
+        cmd: >-
+          snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}} sql -f "{{.ITEM}}"
+    sources:
+      - "create-tables/*.sql"
+
+  create-load-procedures:
+    desc: Deploys the LOAD_* stored procedures to the {{.ENV}} environment.
+    method: none
+    cmds:
+      - for: sources
+        cmd: >-
+          snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}} sql -f "{{.ITEM}}"
+    sources:
+      - "load-tables/*.sql"
+
+  load:
+    desc: Calls LANDING.LOAD_ALL() to run the full load against the {{.ENV}} environment.
+    cmd: >-
+      snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}} sql -q "CALL LANDING.LOAD_ALL();"
+
+  deploy-tasks:
+    desc: Deploys the Snowflake TASK objects to the {{.ENV}} environment, created suspended.
+    method: none
+    cmds:
+      - for: sources
+        cmd: >-
+          snow --config-file {{.USER_WORKING_DIR}}/connections.toml --connection {{.ENV}}
+          sql -D "warehouse=LOADING_WH_{{.ENV | upper}}" -f "{{.ITEM}}"
+    sources:
+      - "tasks/*.sql"
+
+  info:
+    cmds:
+      - echo "Root {{.ROOT_DIR}}"
+      - echo "Current {{.TASKFILE_DIR}}"
+      - echo "Working {{.USER_WORKING_DIR}}"
+      - echo "Env {{.ENV}}"

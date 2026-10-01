@@ -1,0 +1,23 @@
+CREATE OR REPLACE PROCEDURE LANDING.LOAD_ORDER_DETAILS()
+RETURNS STRING
+LANGUAGE SQL
+AS
+$$
+BEGIN
+    COPY INTO LANDING.ORDER_DETAILS
+    FROM
+    (
+        SELECT
+            $1,
+            $2,
+            $3,
+            $4,
+            $5
+        FROM @LANDING.NORTHWIND_STAGE/"order-details.csv"
+    )
+    ON_ERROR = abort_statement
+    FILE_FORMAT = (FORMAT_NAME = LANDING.NORTHWIND_CSV_INGESTION_FORMAT);
+
+    RETURN 'Loaded LANDING.ORDER_DETAILS';
+END;
+$$;

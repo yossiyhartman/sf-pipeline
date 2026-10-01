@@ -14,6 +14,6 @@ includes:
     taskfile: ./dbt/Taskfile.yml
     dir: ./dbt
 
-  ingestion:
-    taskfile: ./ingestion/Taskfile.yml
-    dir: ./ingestion
+  sql:
+    taskfile: ./sql/Taskfile.yml
+    dir: ./sql
