@@ -5,12 +5,6 @@ version: '3'
 dotenv:
   - .env
 
-env:
-  # Lets `snow` find connections.toml at the repo root automatically, with
-  # no --config-file flag needed anywhere. Which connection is active comes
-  # from SNOWFLAKE_DEFAULT_CONNECTION_NAME (see .env.example).
-  SNOWFLAKE_HOME: '{{.ROOT_DIR}}'
-
 includes:
   tf:
     taskfile: ./infra/Taskfile.yml
